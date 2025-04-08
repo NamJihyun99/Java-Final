@@ -8,12 +8,12 @@ import user.dto.UserUpdateRequest;
 import user.service.UserService;
 import view.MemberView;
 
-public class UserCommandHandler {
+public class UserHandler {
 
     private final MemberView memberView;
     private final UserService userService;
 
-    public UserCommandHandler(MemberView memberView, UserService userService) {
+    public UserHandler(MemberView memberView, UserService userService) {
         this.memberView = memberView;
         this.userService = userService;
     }

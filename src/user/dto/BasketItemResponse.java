@@ -1,25 +1,44 @@
 package user.dto;
 
-import user.domain.Basket;
 import user.domain.BasketItem;
 
-import java.util.List;
+public class BasketItemResponse {
 
-public class BasketResponse {
-
-    private final List<BasketItem> items;
+    private final int basketItemId;
+    private final String productName;
     private final int price;
     private final int number;
     private final int total;
 
-    private BasketResponse(List<BasketItem> items, int price, int number) {
-        this.items = items;
+    public BasketItemResponse(int basketItemId, String name, int price, int number, int total) {
+        this.basketItemId = basketItemId;
+        this.productName = name;
         this.price = price;
         this.number = number;
-        this.total = price * number;
+        this.total = total;
     }
 
-    public static BasketResponse of(Basket basket) {
-        return new BasketResponse(basket.getItems(), baske.get)
+    public static BasketItemResponse of(BasketItem item, String productName) {
+        return new BasketItemResponse(item.getId(), productName, item.getPrice(), item.getQuantity(), item.getTotal());
+    }
+
+    public int getId() {
+        return basketItemId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public int getTotal() {
+        return total;
     }
 }
