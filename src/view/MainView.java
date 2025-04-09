@@ -8,8 +8,9 @@ import java.util.regex.Pattern;
 
 public class MainView {
 
-    private static final Pattern PHONE_PATTERN = Pattern.compile("^[0-9]{11}$");
+    private static final Pattern PHONE_PATTERN = Pattern.compile("^[0-9]*$");
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+    private static final Pattern PWD_PATTERN = Pattern.compile("^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{5,15}$");
 
 
     public int selectMenu() {
@@ -26,8 +27,8 @@ public class MainView {
         System.out.print("이메일을 입력하세요 >> ");
         String email = validateEmail(ReaderUtil.read().trim());
         System.out.print("비밀번호를 입력하세요 >> ");
-        String password = validateStringEmpty(ReaderUtil.read().trim());
-        System.out.print("휴대폰 번호를 입력하세요 >> ");
+        String password = validatePwd(ReaderUtil.read().trim());
+        System.out.print("전화번호를 입력하세요 >> ");
         String phone = validatePhoneNumber(ReaderUtil.read());
 
         return new UserSaveRequest(name, email, password, phone);
@@ -41,7 +42,7 @@ public class MainView {
             return null;
         }
         System.out.print("비밀번호를 입력하세요 >> ");
-        String password = validateStringEmpty(ReaderUtil.read().trim());
+        String password = validatePwd(ReaderUtil.read().trim());
 
         return new LoginRequest(email, password);
     }
@@ -69,10 +70,18 @@ public class MainView {
         return emailInput;
     }
 
+    private String validatePwd(String pwdInput) {
+        validateStringEmpty(pwdInput);
+        if (!PWD_PATTERN.matcher(pwdInput).matches()) {
+            throw new IllegalArgumentException("올바른 비밀번호 형식이 아닙니다.");
+        }
+        return pwdInput;
+    }
+
     private String validatePhoneNumber(String input) {
         validateStringEmpty(input);
         if (!PHONE_PATTERN.matcher(input).matches()) {
-            throw new IllegalArgumentException("올바른 번호 형식이 아닙니다. 숫자 11자리를 입력해주세요.");
+            throw new IllegalArgumentException("올바른 번호가 아닙니다.");
         }
         return input;
     }

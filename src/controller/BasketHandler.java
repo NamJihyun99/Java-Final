@@ -38,6 +38,7 @@ public class BasketHandler {
         if ("y".equals(answer)) {
             BasketItemSaveRequest saveRequest = memberView.getBasketItemSaveRequest(productId);
             basketService.addItem(userId, saveRequest);
+            memberView.printBasketItemSaveMsg();
         } else if (!"n".equals(answer)) {
             throw new IllegalArgumentException("잘못된 입력입니다. y 또는 n을 입력하세요");
         }

@@ -3,6 +3,7 @@ package product.service;
 import product.dao.ProductDao;
 import product.domain.Product;
 import product.dto.*;
+import user.dao.BasketItemDao;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,9 +11,11 @@ import java.util.List;
 public class ProductService {
 
     private final ProductDao productDao;
+    private final BasketItemDao basketItemDao;
 
-    public ProductService(ProductDao productDao) {
+    public ProductService(ProductDao productDao, BasketItemDao basketItemDao) {
         this.productDao = productDao;
+        this.basketItemDao = basketItemDao;
     }
 
     public void save(ProductSaveRequest request, LocalDate now) {
@@ -52,5 +55,6 @@ public class ProductService {
     public void delete(String id) {
         productDao.findById(id);
         productDao.delete(id);
+        basketItemDao.deleteByProductId(id);
     }
 }

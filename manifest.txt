@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: Main
+Class-Path: lib/ojdbc11-23.7.0.25.01.jar lib/oraclepki-23.7.0.25.01.jar

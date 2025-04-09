@@ -27,18 +27,18 @@ public class DBConnectionUtil {
             DB_USER = properties.getProperty("database.user");
             DB_PASSWORD = properties.getProperty("database.password");
         } catch (IOException e) {
-            throw new RuntimeException("DB 설정 파일 로딩 실패", e);
+            throw new RuntimeException("DB 설정 파일 로딩 실패" + e.getMessage());
         }
     }
 
     public static Connection getConnection() {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
-            return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("MySQL 드라이버 로딩 실패", e);
+            throw new RuntimeException("MySQL 드라이버 로딩 실패 : " + e.getMessage());
         } catch (SQLException e) {
-            throw new RuntimeException("DB 연결에 실패했습니다.", e);
+            throw new RuntimeException("DB 연결에 실패했습니다 : " + e.getMessage());
         }
     }
 

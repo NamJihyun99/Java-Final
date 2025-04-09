@@ -140,4 +140,19 @@ public class OracleBasketItemDao implements BasketItemDao {
             throw new RuntimeException("장바구니 품목 삭제 중 오류 발생 : " + e.getMessage());
         }
     }
+
+    @Override
+    public void deleteByProductId(String productId) {
+        String sql = "DELETE FROM tb_basket_item WHERE no_product = ?";
+
+        try (Connection conn = DBConnectionUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setQueryTimeout(10);
+            pstmt.setString(1, productId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("장바구니 품목 삭제 중 오류 발생 : " + e.getMessage());
+        }
+    }
 }

@@ -7,8 +7,11 @@ import user.dto.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class MemberView {
+
+    private static final Pattern PWD_PATTERN = Pattern.compile("^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{5,15}$");
 
     public void printMyName(boolean isAdmin, String name) {
         if (isAdmin) {
@@ -22,7 +25,7 @@ public class MemberView {
      */
 
     public int selectMenu(boolean isAdmin) {
-        System.out.println("========================== 회원 메뉴 ============================");
+        System.out.println("================================ 회원 메뉴 =======================================");
         String menu = "1. 상품 목록\n2. 상품명 검색\n3. 장바구니 조회\n4. 회원 정보 조회\n5. 회원 정보 수정\n6. 로그아웃(처음으로)\n7. 회원 탈퇴";
         int option = 7;
         if (isAdmin) {
@@ -41,10 +44,10 @@ public class MemberView {
     }
 
     public void printProducts(List<ProductsResponse> products) {
-        System.out.println("==================== 구매 가능한 상품 목록 =========================");
+        System.out.println("============================ 구매 가능한 상품 목록 =================================");
         System.out.printf("%10s\t%20s\t%10s\n", "ID", "상품명", "가격");
         products.forEach(product -> System.out.printf("%10s\t%20s\t%10d\n", product.getId(), product.getName(), product.getSalePrice()));
-        System.out.println("===============================================================");
+        System.out.println("=================================================================================");
     }
 
     public String getSearchKeyword() {
@@ -54,11 +57,11 @@ public class MemberView {
 
     // 1 - (1) 상품 상세 조회
     public void printProductInfo(ProductInfoResponse product) {
-        System.out.println("\n====================== 제품 상세 정보 ============================");
+        System.out.println("\n============================= 제품 상세 정보 =====================================");
         System.out.println("상품명 : " + product.getProductName());
         System.out.println("설명  : " + product.getDetail());
         System.out.println("가격  : " + product.getPrice());
-        System.out.println("===============================================================");
+        System.out.println("=================================================================================");
     }
 
     // 1 - (2) 장바구니 담기
@@ -74,16 +77,20 @@ public class MemberView {
         return new BasketItemSaveRequest(productId, quantity);
     }
 
+    public void printBasketItemSaveMsg() {
+        System.out.println("해당 물품을 장바구니에 담았습니다");
+    }
+
     // 2. 장바구니 조회
     public int selectBasketMenu(BasketResponse basket) {
-        System.out.println("======================== 나의 장바구니 ===========================");
+        System.out.println("============================= 나의 장바구니 =======================================");
         System.out.printf("%5s\t%15s\t%10s\t%10s\t%10s\n", "ID", "상품명", "가격", "개수", "총액");
         basket.getItems().forEach(item ->
                 System.out.printf("%5s\t%15s\t%10d\t%10s\t%10s\n",
                         item.getId(), item.getProductName(), item.getPrice(), item.getNumber(), item.getTotal()));
-        System.out.println("---------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------");
         System.out.printf("%5s%55d\n", "합계", basket.getTotal());
-        System.out.println("===============================================================");
+        System.out.println("=================================================================================");
         System.out.println("1. 품목 수정\n2. 품목 삭제\n3. 장바구니 비우기\n4. 뒤로 가기");
         return ReaderUtil.getValidOption(4);
     }
@@ -119,14 +126,16 @@ public class MemberView {
     }
 
     // 3. 회원 정보 조회
-    public void printMemberInfo(MemberInfoResponse response) {
+    public void printUserInfo(UserInfoResponse response) {
+        System.out.println("=============================== 회원 정보 ========================================");
         System.out.println("이름 : " + response.getName());
         System.out.println("이메일 : " + response.getEmail());
-        System.out.println("휴대폰 : " + response.getPhone());
+        System.out.println("전화번호 : " + response.getPhone());
     }
 
     // 4. 회원 정보 수정
     public int updateInfoMenu() {
+        System.out.println("============================== 회원 정보 수정 =====================================");
         System.out.println("1. 비밀번호 변경 | 2. 이름 및 전화번호 수정 | 3. 뒤로 가기");
         return ReaderUtil.getValidOption(3);
     }
@@ -136,11 +145,18 @@ public class MemberView {
         System.out.print("기존 비밀번호 >> ");
         String oldPassword = ReaderUtil.read();
         System.out.print("새 비밀번호 >> ");
-        String password1 = ReaderUtil.read();
+        String password1 = validatePwd(ReaderUtil.read());
         System.out.print("새 비밀번호 다시 입력 >> ");
-        String password2 = ReaderUtil.read();
+        String password2 = validatePwd(ReaderUtil.read());
 
         return new PasswordUpdateRequest(oldPassword, password1, password2);
+    }
+
+    private String validatePwd(String pwdInput) {
+        if (!PWD_PATTERN.matcher(pwdInput).matches()) {
+            throw new IllegalArgumentException("올바른 비밀번호 형식이 아닙니다.");
+        }
+        return pwdInput;
     }
 
     // 4 - (2) 이름 및 전화번호 수정
@@ -178,9 +194,9 @@ public class MemberView {
 
     // 7. 상품 관리
     public int selectAdminMenu() {
-        System.out.println("========================= 관리자 메뉴 ===========================");
+        System.out.println("=============================== 관리자 메뉴 ======================================");
         System.out.println("1. 상품 등록 | 2. 상품 수정 | 3. 상품 삭제 | 4. 재고 관리 | 5. 뒤로 가기");
-        System.out.println("===============================================================");
+        System.out.println("=================================================================================");
         return ReaderUtil.getValidOption(5);
     }
 
@@ -233,7 +249,7 @@ public class MemberView {
     }
 
     public ProductUpdateRequest getProductUpdateRequest() {
-        System.out.println("상품 정보를 수정합니다.");
+        System.out.println("상품 정보를 수정합니다");
 
         System.out.print("상품 이름 >> ");
         String name = ReaderUtil.read();
@@ -261,7 +277,7 @@ public class MemberView {
 
     private String validateStringEmpty(String input) {
         if (input.isBlank()) {
-            throw new IllegalArgumentException("빈 값 입니다");
+            throw new IllegalArgumentException("");
         }
         return input;
     }

@@ -2,7 +2,7 @@ package controller;
 
 import user.domain.User;
 import user.dto.LoginRequest;
-import user.dto.MemberInfoResponse;
+import user.dto.UserInfoResponse;
 import user.dto.PasswordUpdateRequest;
 import user.dto.UserUpdateRequest;
 import user.service.UserService;
@@ -20,7 +20,7 @@ public class UserHandler {
 
     // 4. 회원 정보 조회
     void print(User member) {
-        memberView.printMemberInfo(MemberInfoResponse.of(
+        memberView.printUserInfo(UserInfoResponse.of(
                 member.getUserId(),
                 member.getName(),
                 member.getPhone(),

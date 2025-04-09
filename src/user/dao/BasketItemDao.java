@@ -12,4 +12,5 @@ public interface BasketItemDao {
     List<BasketItem> findAllByUserId(String userId);
     void clear(String userId);
     void delete(int itemId);
+    void deleteByProductId(String id);
 }

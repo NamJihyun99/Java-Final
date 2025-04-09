@@ -35,7 +35,7 @@ public class AppConfig {
     }
 
     public ProductService productService() {
-        return new ProductService(productDao());
+        return new ProductService(productDao(), basketItemDao());
     }
 
     public ProductDao productDao() {
